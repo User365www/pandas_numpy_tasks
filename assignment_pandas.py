@@ -66,15 +66,17 @@ res_for_married = data[(data['sex'] == 'Male') & data['marital-status'].str.star
 res_for_single = data[(data['sex'] == 'Male') & ~(data['marital-status'].str.startswith('Married'))]['salary'].eq('>50K').mean()*100
 print(res_for_married)
 print(res_for_single)
+res = 'married' if res_for_married > res_for_single else 'single'
+print(res)
 #%% md
 # **9. Какое максимальное число часов человек работает в неделю (признак *hours-per-week*)? Сколько людей работают такое количество часов и каков среди них процент зарабатывающих много?**
 #%%
 max_hours_per_week = data['hours-per-week'].max()
-print(max_hours_per_week)
+print(f'max hours per week - {max_hours_per_week}')
 hard_workers = data[data['hours-per-week'] == max_hours_per_week]
-print(len(hard_workers))
+print(f'number of people working max hours per week - {len(hard_workers)}')
 res = hard_workers['salary'].eq('>50K').mean()*100
-print(res)
+print(f'{res}% of hard workers have high salary')
 #%% md
 # **10. Посчитайте среднее время работы (*hours-per-week*) зарабатывающих мало и много (*salary*) для каждой страны (*native-country*).**
 #%%
@@ -95,20 +97,24 @@ cond = [
     (data['age'] > 70) & (data['age'] <= 100)
 ]
 lable = ['young', 'adult', 'retiree']
-data['AgeGroup'] = np.select(cond, lable, default='Unknown')
+data['AgeGroup'] = np.select(cond, lable, default='Неизвестно')
 print(data['AgeGroup'])
 #%% md
 # **12-13. Определите количество зарабатывающих >50K в каждой из возрастных групп (колонка AgeGroup), а также выведите название возрастной группы, в которой чаще зарабатывают больше 50К (>50K)**
 #%%
-filtered = data[data['salary'] == '>50K']['AgeGroup'].value_counts()
-print(filtered)
-res = filtered[filtered == filtered.max()].index[0]
-print(res)
+data['higher_sal'] = data['salary'] == '>50K'
+grouped = data.groupby('AgeGroup')['higher_sal'].mean() * 100
+print(grouped)
+res = grouped[grouped == grouped.max()].index[0]
+print(f'{res} - more percent of high salary')
 #%% md
 # **14. Сгруппируйте людей по типу занятости (колонка occupation) и определите количество людей в каждой группе. После чего напишите функциюю фильтрации filter_func, которая будет возвращать только те группы, в которых средний возраст (колонка age) не больше 40 и в которых все работники отрабатывают более 5 часов в неделю (колонка hours-per-week)**
 #%%
-
+data_f = data.groupby('occupation').size()
+print(f'count of people for every group - {data_f}')
 def filter_func(mydata):
-    return mydata[(mydata['age'] <= 40) & (mydata['hours-per-week'] > 5)]
-data = filter_func(data)
-print(data['occupation'].value_counts())
+    age_condition = mydata['age'].mean() <= 40
+    hours_condition = (mydata['hours-per-week'] > 5).all()
+    return age_condition and hours_condition
+res = data.groupby('occupation').filter(filter_func)
+print(f' group - {res['occupation'].unique()[0]}')
