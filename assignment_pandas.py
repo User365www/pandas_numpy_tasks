@@ -95,7 +95,7 @@ cond = [
     (data['age'] > 70) & (data['age'] <= 100)
 ]
 lable = ['young', 'adult', 'retiree']
-data['AgeGroup'] = np.select(cond, lable, default='Неизвестно')
+data['AgeGroup'] = np.select(cond, lable, default='Unknown')
 print(data['AgeGroup'])
 #%% md
 # **12-13. Определите количество зарабатывающих >50K в каждой из возрастных групп (колонка AgeGroup), а также выведите название возрастной группы, в которой чаще зарабатывают больше 50К (>50K)**
