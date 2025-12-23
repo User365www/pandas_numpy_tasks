@@ -72,7 +72,7 @@ print(list_B)
 set_b = set(list(itertools.chain(*list_B)))
 print(set_b)
 for i, row in enumerate(list_A):
-    if set(row) == set_b:
+    if set(row) >= set_b:
        res.append(i)
 print(res)
 #%% md
@@ -93,14 +93,6 @@ print(indexis)
 #%%
 arr = np.random.randint(1, 4, (10, 2))
 print(np.unique(arr, axis=0))
-#%%
-list6 = [[random.randint(1, 2) for _ in range(2)] for _ in range(10)]
-print(list6)
-res = []
-for row in list6:
-    if row not in res:
-        res.append(row)
-print(res)
 #%% md
 # ______
 # ______

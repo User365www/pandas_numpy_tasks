@@ -50,7 +50,6 @@ print(data.groupby('salary')['age'].std())
 #%% md
 # **6. Правда ли, что люди, которые получают больше 50k, имеют минимум высшее образование? (признак *education – Bachelors, Prof-school, Assoc-acdm, Assoc-voc, Masters* или *Doctorate*)**
 #%%
-import numpy as np
 education = ['Bachelors', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', 'Masters', 'Doctorate']
 educated = data['education'].isin(education) # educated - true, not educated - false
 high_salary = educated[data['salary'] == '>50K'] # only high salary
@@ -90,14 +89,17 @@ print(grouped)
 # 
 # **Проставьте название соответсвтуещей группы для каждого человека в новой колонке AgeGroup**
 #%%
-import numpy as np
-cond = [
-    (data['age'] >= 16) & (data['age'] <= 35),
-    (data['age'] > 35) & (data['age'] <= 70),
-    (data['age'] > 70) & (data['age'] <= 100)
-]
-lable = ['young', 'adult', 'retiree']
-data['AgeGroup'] = np.select(cond, lable, default='Неизвестно')
+def get_age_group(age):
+    if 16 <= age <= 35:
+        return 'young'
+    elif 35 < age <= 70:
+        return 'adult'
+    elif 70 < age <= 100:
+        return 'retiree'
+    else:
+        return 'Default'
+
+data['AgeGroup'] = data['age'].apply(get_age_group)
 print(data['AgeGroup'])
 #%% md
 # **12-13. Определите количество зарабатывающих >50K в каждой из возрастных групп (колонка AgeGroup), а также выведите название возрастной группы, в которой чаще зарабатывают больше 50К (>50K)**
