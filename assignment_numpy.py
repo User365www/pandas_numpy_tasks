@@ -114,6 +114,17 @@ diag_elem = np.diag(arr)
 nenul_diag_elem = diag_elem[diag_elem != 0]
 res = np.prod(nenul_diag_elem)
 print(res)
+#%%
+import random
+list_arr = [[random.randint(0, 4) for _ in range(3)] for _ in range(4)]
+size = min(len(list_arr), len(list_arr[0]))
+print(list_arr)
+print(size)
+res = 1
+for i in range(size):
+    if list_arr[i][i] != 0:
+        res *= list_arr[i][i]
+print(res)
 #%% md
 # * __Задача 2__: Даны два вектора x и y. Проверить, задают ли они одно и то же мультимножество.  
 #   Например, для x = np.array([1, 2, 2, 4]), y = np.array([4, 2, 1, 2]) ответ True.
@@ -121,6 +132,13 @@ print(res)
 x = np.random.randint(1, 4, 4)
 y = np.random.randint(1, 4, 4)
 res = np.all((len(x) == len(y)) & (np.sort(x) == np.sort(y)))
+print(res)
+#%%
+x = [random.randint(1, 4) for _ in range(4)]
+y = [random.randint(1, 4) for _ in range(4)]
+print(x)
+print(y)
+res = len(x) == len(y) and sorted(x) == sorted(y)
 print(res)
 #%% md
 # * __Задача 3__: Найти максимальный элемент в векторе x среди элементов, перед которыми стоит ноль. 
@@ -130,6 +148,14 @@ arr = np.array([1, 0, 3, 5, 0, 7, 4, 3, 0, 11])
 pos = np.where(arr[:-1]==0)[0]
 res = np.max(arr[pos+1])
 print(res)
+#%%
+arr = [1, 0, 3, 9, 0, 7, 4, 3, 0, 11]
+max_el = 0
+for i in range(0, len(arr) - 1):
+    if arr[i] == 0:
+        if arr[i+1] > max_el:
+            max_el = arr[i+1]
+print(max_el)
 #%% md
 # * __Задача 4__: Реализовать кодирование длин серий (Run-length encoding). Для некоторого вектора x необходимо вернуть кортеж из двух векторов одинаковой длины. Первый содержит числа, а второй - сколько раз их нужно повторить.  
 #  Например, для x = np.array([2, 2, 2, 3, 3, 3, 5]) ответ (np.array([2, 3, 5]), np.array([3, 3, 1])).
@@ -144,6 +170,17 @@ counts = end - start
 values = arr[start]
 print(values)
 print(counts)
+#%%
+arr = [2, 2, 2, 3, 3, 3, 5]
+values, counts = [], []
+for num in arr:
+    if not values or num != values[-1]:
+        values.append(num)
+        counts.append(1)
+    else:
+        counts[-1] += 1
+res = tuple[values, counts]
+print(res)
 #%% md
 # * __Задача 5__: Даны две выборки объектов - X и Y. Вычислить матрицу евклидовых расстояний между объектами. Сравните с функцией scipy.spatial.distance.cdist по скорости работы.
 #%%
@@ -155,6 +192,18 @@ xy = arr_x @ arr_y.T
 expr = np.maximum(x_sq+y_sq-2*xy, 0)
 res = np.sqrt(expr)
 print(res)
+#%%
+import math
+
+X = [[1, 2], [3, 4]]
+Y = [[1, 3], [2, 4], [6, 8]]
+
+dist_matrix = [[math.sqrt(sum((xi - yj) ** 2 for xi, yj in zip(x, y)))for y in Y]
+    for x in X
+]
+
+for row in dist_matrix:
+    print(row)
 #%% md
 # _______
 # ________
